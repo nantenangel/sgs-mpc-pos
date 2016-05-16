@@ -1,0 +1,17 @@
+.absolute-center {
+ margin: auto;
+ position: absolute;
+ top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.absolute-center.is-responsive {
+ width: 90%;
+ height: 50%;
+ max-width: 350px;
+}
+
+.mynav {
+ padding:3px;
+ border-bottom:solid 1px #e7e7e7;
+ background-color:#f8f8f8;
+}
