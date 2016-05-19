@@ -62,7 +62,7 @@
 		}
 		
 		$_SESSION['alert_msg'] = "Purchase Request sent! Please wait for approval.";
-		$user->redirect('home.php');
+		$user->redirect('newrequest.php');
 	} else {
 		$_SESSION['alert_msg'] = null;
 	}
@@ -200,8 +200,9 @@
     <nav role="navigation">
 	   <div class="mynav navbar-fixed-top" style="">
 		<ul class="nav nav-pills pull-left">
+		    <li><a href="home.php"><span class="glyphicon glyphicon-home"></span></a></li>
 			<li class="active"><a style="cursor:default;"><span class="glyphicon glyphicon-file"></span><span class="hidden-xs">&nbsp;New Request</span></a></li>
-			<li><a href="requestlist.php"><span class="glyphicon glyphicon-list"></span><span class="hidden-xs">&nbsp;Request List</span></a></li>
+			<!--<li><a href="requestlist.php"><span class="glyphicon glyphicon-list"></span><span class="hidden-xs">&nbsp;Request List</span></a></li>-->
 		</ul>
 		<ul class="nav nav-pills pull-right">
 			<li><a href="logout.php" class="navbar-link" style="margin-left:3px;"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Logout</a></li>
@@ -226,7 +227,7 @@
 				<table class="table table-bordered">
 					<thead>
 						<tr>
-							<th class="col-xs-1 col-md-1" style="margin:0 auto; text-align:center;">
+						<th class="col-xs-1 col-md-1" style="margin:0 auto; text-align:center;">
 							<input disabled id="chkboxAll" type="checkbox" onclick="selectAll('dataTable')" style="cursor:default;"  /></th>
 							<th class="col-xs-2 col-md-2" style="text-align:center;cursor:default;">QUANTITY</th>
 							<th class="col-xs-9 col-md-9" style="text-align:center;cursor:default;">ITEM</th>

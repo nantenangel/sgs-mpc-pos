@@ -32,8 +32,7 @@
   <nav role="navigation">
 	  <div class="mynav navbar-fixed-top">
          <ul class="nav nav-pills pull-left">
-		    <li><a href="home.php"><span class="glyphicon glyphicon-home"></span></a></li>
-            <li><a href="newrequest.php"><span class="glyphicon glyphicon-file"></span><span class="hidden-xs">&nbsp;New Request</span></a></li>
+            <li><a  href="home.php"><span class="glyphicon glyphicon-file"></span><span class="hidden-xs">&nbsp;New Request</span></a></li>
             <li class="active"><a style="cursor:default;"><span class="glyphicon glyphicon-list"></span><span class="hidden-xs">&nbsp;Request List</span></a></li>
          </ul>
          <ul class="nav nav-pills pull-right">

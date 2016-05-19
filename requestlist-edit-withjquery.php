@@ -30,6 +30,14 @@
       <!-- Include all compiled plugins (below), or include individual files as needed --> 
       <script src="js/bootstrap.min.js"></script>
 	  <script src="js/1.12.2.js"></script>
+	  <script>
+	  $(document).ready(function(){
+		 $(".details").show();
+	     $("#toggle_details").click(function(){
+			$().toggle();
+	     });
+	  });
+   </script>
    </head> 
    <body>
       <!--Navigation-->
@@ -73,36 +81,38 @@
 					if ($row = $stmt->fetch()){
 						$id=$row['RequestID']; ?>
 						<tr>
-							<td style='text-align:center;cursor:default;'><a href="" data-toggle='modal' data-target='#RequestInfo'>View Details</a></td>
+							<!--<td style='text-align:center;cursor:default;'><a id="toggle_details" href="" >&plus; view details</a></td>
+							-->
 							<td style='text-align:center;cursor:default;'><?php echo $row['RequestID'] ?></td>
 							<td style='text-align:center;cursor:default;'><?php echo $row['RequestDate'] ?></td>
 							<td style='text-align:center;cursor:default;'><?php echo $row['RequestStatus'] ?></td>
 						</tr>
+						<tr  class="details" id="details[]">
+							<td colspan="4">
+								<div>
+								<?php
+									try{
+										$stmt2 = $user->db->prepare("SELECT * FROM purchaserequestdetail WHERE RequestID = :requestid");
+										$stmt2->execute([':requestid'=>$id]);
+									} catch(PDOException $e){
+										echo "Error: " . $e->getMessage();
+									}
+									echo "<table class='table'>";
+									for ($j=0;$j<$stmt2->rowCount();$j++){
+										$row2 = $stmt2->fetch();
+										echo "<tr>";
+										echo "<td>" . $row2['RequestItem'] . "</td>";
+										echo "<td>" . $row2['RequestQuantity'] . "</td>";
+										echo "</tr>";
+									}
+									echo "</table>";
+								?>
+								</div>
+							</td>
+						</tr>
 			<?php   }
-				} ?>
-			</table>
-			<div class='modal fade' id='RequestInfo' role='dialog'>
-			<div class='modal-dialog'>
-			<!-- Modal content-->
-			<div class='modal-content'>
-				<div class='modal-header'>
-					<button type='button' class='close' data-dismiss='modal'>&times;</button>
-					<h4 class='modal-title'>Request ID</h4>
-				</div>
-				<div class='modal-body'>
-					<table class='table table-default'>
-					<thead>
-						<th class='col-md-8' style='cursor:default;'>Item</th>
-						<th class='col-md-4' style='text-align:center;cursor:default;'>Quantity</th>
-					</thead>
-					</table>
-				</div>
-				<div class='modal-footer'>
-					<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
-				</div>
-			</div>
-			</div>
-			</div>
+			} ?>
+			</table>			
 			<hr/>
 			</div>
 		</div>

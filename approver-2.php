@@ -8,7 +8,6 @@
   
   $employeeid = $_SESSION['user_session'];
 ?>
-
 <!DOCTYPE html> 
 <html> 
 <head> 
@@ -74,16 +73,14 @@
         <th class="col-md-2" style="text-align:center;cursor:default;">Status</th>
       </thead>
 	  </table> <!-- End of Table Request -->
-      <?php
-	    if ($stmt->rowCount()>0) {
+      <?php 
         for ($i=0; $i<$stmt->rowCount();$i++){
           if ($row = $stmt->fetch()){
-            $requestid[] = $row['RequestID'];
-			$_SESSION['requestid']=$requestid[$i];
-            $employeeid = $row['EmployeeID']?>
+            $requestid=$row['RequestID'];
+            $employeeid=$row['EmployeeID']?>
             <table class="table table-default" style="margin-bottom:0px;">
             <tr>
-              <td class="col-md-2" style="text-align:center;"><a href="#<?php echo $requestid[$i]; ?>" data-toggle="modal" data-target="#<?php echo $requestid[$i]; ?>">View Details</a></td>
+              <td class="col-md-2" style="text-align:center;"><a href="#<?php echo $requestid; ?>" data-toggle="modal" data-target="#<?php echo $requestid; ?>">View Details</a></td>
               <td class="col-md-2" style="text-align:center;cursor:default;"><?php echo $row['RequestID'] ?></td>
               <td class="col-md-3" style="text-align:center;cursor:default;"><?php echo $row['RequestDate'] ?></td>
               <td class="col-md-3" style="text-align:center;cursor:default;"><?php echo $row['DueDate'] ?></td>
@@ -91,13 +88,13 @@
             </tr>
             </table> <!-- End of Table Request Per Item -->
 			<!-- Modal -->
-            <div class='modal fade' id='<?php echo $requestid[$i]; ?>' role='dialog'>
+            <div class='modal fade' id='<?php echo $requestid; ?>' role='dialog'>
             <div class='modal-dialog'>
             <!-- Modal content-->
             <div class='modal-content'>
               <div class='modal-header'>
                 <button type='button' class='close' data-dismiss='modal'>&times;</button>
-                <h4 class='modal-title'>Request ID [<?php echo $requestid[$i]; ?>]</h4>
+                <h4 class='modal-title'>Request ID [<?php echo $requestid; ?>]</h4>
               </div>
               <div class='modal-body'>
 			  <?php //Get Employee Details
@@ -117,7 +114,7 @@
               <p>Name: <?php echo $employeename; ?></p>
               <p>Branch: <?php echo $branch; ?></p>
               <p>Department: <?php echo $department; ?></p>
-              <!--<p>Position: <?php echo $position; ?></p>-->
+              <p>Position: <?php echo $position; ?></p>
               <hr/>
 			  <table class='table table-bordered'>
               <thead>
@@ -128,21 +125,19 @@
 			  <?php
 			    try {
                   $stmt3 = $user->db->prepare("SELECT RequestItem, RequestQuantity FROM purchaserequestdetail WHERE RequestID = :requestid");
-                  $stmt3->execute([':requestid'=>$requestid[$i]]);
+                  $stmt3->execute([':requestid'=>$requestid]);
                 } catch(PDOException $e) {
                   echo "Error: " . $e->getMessage();
                 }
 			  ?>
-			  <form action="<?php $_PHP_SELF ?>" method="POST">
+			  <form method="POST">
 			  <?php
 			    for ($j=0;$j<$stmt3->rowCount();$j++){
 				  if ($row3 = $stmt3->fetch()){ ?>
 				    <tr>							    
-                      <td class="" style="text-align:left;cursor:default;"><?php echo $row3['RequestItem'] ?></td>
-                      <td class="" style="text-align:right;cursor:default;">
-					    <input min="1" step="1" type="number" value="<?php echo number_format($row3['RequestQuantity']) ?>" class="form-control"></input>
-				      </td>
-                      <td><input disabled min="1" step="0.01" type="number" class="form-control"></input></td>
+                      <td class=""  style="text-align:left;cursor:default;"><?php echo $row3['RequestItem'] ?></td>
+                      <td class=""  style="text-align:right;cursor:default;"><?php echo number_format($row3['RequestQuantity']) ?></td>
+                      <td><input required min="1" type="number" class="form-control"></input></td>
                     </tr>
 			  <?php }
 				}
@@ -150,16 +145,12 @@
 			  </table>              
 			  <hr/>
               <div class="form-group">
-                <!--<label>Remarks</label>
-                <textarea class="form-control" style="resize:none;"></textarea>-->
+              <label>Remarks</label>
+              <textarea class="form-control" style="resize:none;"></textarea>
               </div>
               <div class="form-group">
-                <button id="btn_approve" name="btn_approve" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>&nbsp;Approve</button>
-                <button id="btn_deny" name="btn_deny" type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;Deny</button>
-				<!--
-				<a href="approve.php">I want to approve this request</a><br/>
-				<a href="deny.php">I want to deny this request</a>
-				-->
+              <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>&nbsp;Approve</button>
+              <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>&nbsp;Disapprove</button>
               </div>
 			  </form>
 			  </div>
@@ -169,37 +160,8 @@
 			</div>
 			</div>
 			</div> <!-- End of Modal -->
-			<?php
-			  if (isset($_POST['btn_approve'])){
-			    $stmt = $user->db->prepare("UPDATE purchaserequestheader SET RequestStatus = :requeststatus WHERE RequestID = :requestid") ;
-                $stmt->execute(array(':requeststatus'=>'APPROVED',':requestid'=>$requestid[$i]));
-			  }
-			  elseif (isset($_POST['btn_deny'])){
-			    $stmt = $user->db->prepare("UPDATE purchaserequestheader SET RequestStatus = :requeststatus WHERE RequestID = :requestid") ;
-            $stmt->execute(array(':requeststatus'=>'DENIED',':requestid'=>'SGS-1'));
-			  }
-			
-		    /*function approve_request(){
-			echo "btn approve accepted";
-            $stmt = $user->db->prepare("UPDATE purchaserequestheader SET RequestStatus = :requeststatus WHERE RequestID = :requestid") ;
-            $stmt->execute(array(':requeststatus'=>'APPROVED',':requestid'=>$requestid[$i]));
-					
-			$user->redirect('approve.php');
-		    } 
-			if
-			function deny_request(){
-			$stmt = $user->db->prepare("UPDATE purchaserequestheader SET RequestStatus = :requeststatus WHERE RequestID = :requestid") ;
-            $stmt->execute(array(':requeststatus'=>'DENIED',':requestid'=>'SGS-1'));
-			$user->redirect('approver.php');
-            }
-			*/
-			?>
         <?php } //end of if
-	      } //end of for 
-		} //end of if(rowCount>0)
-		else {
-		  echo "No existing records...";
-		} ?>
+	    } //end of for ?>
       <hr/>
     </div> <!-- End of Panel Body -->
     </div> <!-- End of Panel -->
